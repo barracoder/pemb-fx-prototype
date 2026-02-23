@@ -22,3 +22,9 @@ Thumbs.db
 
 # Test results
 TestResults/
+
+# Ralph runtime files (not needed in base image)
+scripts/ralph/progress.txt
+scripts/ralph/prd.json
+scripts/ralph/.last-branch
+scripts/ralph/archive/

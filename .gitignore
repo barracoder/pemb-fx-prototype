@@ -30,3 +30,6 @@ TestResults/
 # Ralph runtime
 scripts/ralph/.last-branch
 scripts/ralph/archive/
+
+
+.env

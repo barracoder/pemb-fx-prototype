@@ -59,6 +59,23 @@ Print a summary table:
 
 Ask the user to confirm before writing.
 
+### Step 5: Launch Ralph (Optional)
+
+After writing `prd.json`, ask the user: **"Launch Ralph now?"**
+
+If yes, run the Docker container:
+
+```bash
+./scripts/ralph/docker-run.sh --prd scripts/ralph/prd.json
+```
+
+Offer relevant flags based on context:
+- `--no-push` if the user hasn't mentioned pushing
+- `--max-iterations <n>` if the user has a preference
+- `--rebuild-base` if this is the first run or the base image may be stale
+
+This reduces the workflow from 3 steps (convert PRD, build image, run container) to a single skill invocation.
+
 ## Conversion Rules
 
 1. **IDs** are sequential: US-001, US-002, etc.

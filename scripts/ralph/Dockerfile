@@ -1,30 +1,16 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS ralph-base
 
-# Install system dependencies
+# Install system dependencies + Node.js LTS + Claude CLI (single cached layer)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    jq \
-    git \
-    curl \
-    ca-certificates \
-    gnupg \
-  && rm -rf /var/lib/apt/lists/*
-
-# Install Node.js LTS (20.x)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    jq git curl ca-certificates gnupg \
+  && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
   && apt-get install -y --no-install-recommends nodejs \
+  && npm install -g @anthropic-ai/claude-code \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Claude CLI
-RUN npm install -g @anthropic-ai/claude-code
-
-# Copy workspace
-COPY . /workspace
 WORKDIR /workspace
 
-# Restore .NET dependencies
-RUN dotnet restore Pemberton.Shareclass.Hedging.Prototype/Pemberton.Shareclass.Hedging.Prototype.sln
+COPY scripts/ralph/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Make entrypoint executable
-RUN chmod +x scripts/ralph/entrypoint.sh scripts/ralph/ralph.sh
-
-ENTRYPOINT ["scripts/ralph/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
